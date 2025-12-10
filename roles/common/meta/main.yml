@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: MIT-0
+galaxy_info:
+  author: Jordan Del Pilar
+  description: Common Role for all Devices
+  company: Del Pilar Labs
+
+  license: MIT
+
+  min_ansible_version: "2.2"
+
+  galaxy_tags: [common]
+
+dependencies: []

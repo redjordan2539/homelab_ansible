@@ -1,0 +1,51 @@
+---
+# Generates SSH keys for all devices and updates ssh config to add all devices
+
+- name: Setup SSH
+  hosts: all
+  gather_facts: false
+  connection: local
+
+  vars_files:
+    - vars.yaml
+
+  tasks:
+    # Generate Local SSH Key Pairs
+    - name: Generate SSH Key Pairs
+      community.crypto.openssh_keypair:
+        path: "~/.ssh/{{ inventory_hostname }}"
+        type: ed25519
+        comment: "{{ target_user }}@{{ inventory_hostname }}"
+      delegate_to: localhost
+
+    # Configure SSH Config
+    - name: Update SSH config
+      ansible.builtin.blockinfile:
+        path: ~/.ssh/config
+        create: true
+        mode: '0600'
+        marker: "# {mark} ANSIBLE MANAGED HOSTS"
+        block: |
+          {% for host in groups['all'] %}
+          Host {{ host }}
+              HostName {{ hostvars[host]['ansible_host'] }}
+              User {{ hostvars[host]['ansible_user'] }}
+              IdentityFile ~/.ssh/{{ host }}
+              IdentitiesOnly yes
+
+          {% endfor %}
+
+# Push Keys
+- name: Push SSH Keys
+  hosts: all
+  gather_facts: false
+
+  vars_files:
+    - vars.yaml
+
+  tasks:
+    - name: Push Keys to Servers
+      ansible.posix.authorized_key:
+        user: "{{ target_user }}"
+        state: present
+        key: "{{ lookup('file', '~/.ssh/' + inventory_hostname + '.pub') }}"

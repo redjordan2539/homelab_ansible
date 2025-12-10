@@ -1,0 +1,45 @@
+all:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  children:
+    servers:
+      vars:
+        editor: nano
+      children:
+        ubuntu_servers:
+          hosts:
+            new-bark:
+              ansible_host: newbark.delpilar.net
+              ansible_user: jdelpilar
+              network_manager: systemd-networkd
+        rocky_servers:
+          hosts:
+            goldenrod:
+              ansible_host: goldenrod.delpilar.net
+              ansible_user: jdelpilar
+              network_manager: NetworkManager
+    workstations:
+      vars:
+        editor: vscode
+      children:
+        macbooks:
+          hosts:
+            ss-aqua:
+              ansible_host: ss-aqua.delpilar.net
+              ansible_user: jdelpilar
+            magnet-train:
+              ansible_host: magnet-train.delpilar.net
+              ansible_user: jdelpilar
+        arch_workstations:
+          hosts:
+            mt-silver:
+              ansible_host: mt-silver.delpilar.net
+              ansible_user: jdelpilar
+              gaming_rig: true
+              network_manager: NetworkManager
+    tailscale:
+      hosts:
+        new-bark:
+        mt-silver:
+        ss-aqua:
+        magnet-train:

@@ -1,0 +1,8 @@
+target_user: "jdelpilar"
+ssh_key_path: "~/.ssh/newbark.pub"
+common_packages:
+  - curl
+  - git
+  - htop
+  - unzip
+  - net-tools

@@ -1,0 +1,19 @@
+---
+- name: Config Infrastructure
+  hosts: servers
+  become: true
+  gather_facts: true
+
+  roles:
+    - common
+
+- name: Configure Workstations
+  hosts: workstations
+  become: true
+  gather_facts: true
+  ignore_unreachable: true
+  vars:
+    ansible_ssh_timeout: 3
+
+  roles:
+    - common
