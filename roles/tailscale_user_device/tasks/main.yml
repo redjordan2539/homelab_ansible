@@ -1,3 +1,40 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 # tasks file for roles/tailscale_user_device
+
+# Attempt first tailscale up command
+- name: Initial Tailscale up
+  ansible.builtin.command: timeout 5s tailscale up --login-server={{ all_tailscale_login_url }} --accept-routes --accept-dns
+  register: tailscale_user_device_tailscale_return
+  # Log failed if command fails without timeout
+  failed_when: tailscale_user_device_tailscale_return.rc != 0 and tailscale_user_device_tailscale_return.rc != 124
+  changed_when: false
+
+- name: Get Tailscale OIDC URL
+  ansible.builtin.set_fact:
+    tailscale_user_device_oidc_url: "{{ tailscale_user_device_tailscale_return.stderr | regex_search('https://[\\w./\\-?=&]+') }}"
+  when:
+    - tailscale_user_device_tailscale_return.rc == 124
+    - tailscale_user_device_tailscale_return.stderr is search("https://")
+
+- name: Display OIDC Login URL
+  ansible.builtin.pause:
+    prompt: |
+      ----------------------------------------
+      Tailscale OIDC Login Required
+
+      Please visit the below URL and Login
+
+      {{ tailscale_user_device_oidc_url }}
+
+      Once you login, press ENTER to continue
+      ----------------------------------------
+  when: tailscale_user_device_oidc_url is defined and tailscale_user_device_oidc_url != ""
+
+- name: Final Tailscale up
+  ansible.builtin.command: >
+    tailscale up
+    --login-server={{ all_tailscale_login_url }}
+    --accept-routes
+    --accept-dns
+  changed_when: false
