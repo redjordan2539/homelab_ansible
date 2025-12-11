@@ -26,3 +26,12 @@
 
   roles:
     - tailscale_server
+
+- name: Setup Tailscale for subnet routers
+  hosts: tailscale_subnet_routers
+  become: true
+  gather_facts: true
+  ignore_unreachable: false
+
+  roles:
+    - tailscale_subnet_router
