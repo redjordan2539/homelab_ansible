@@ -38,8 +38,15 @@ all:
               gaming_rig: true
               network_manager: NetworkManager
     tailscale:
-      hosts:
-        new-bark:
-        mt-silver:
-        ss-aqua:
-        magnet-train:
+      children:
+        tailscale_subnet_routers:
+          hosts:
+            new-bark:
+        tailscale_servers:
+          hosts:
+            goldenrod:
+        tailscale_user_devices:
+          hosts:
+            mt-silver:
+            ss-aqua:
+            magnet-train:
