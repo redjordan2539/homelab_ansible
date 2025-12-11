@@ -35,3 +35,12 @@
 
   roles:
     - tailscale_subnet_router
+
+- name: Setup Tailscale for user devices
+  hosts: tailscale_user_devices
+  become: true
+  gather_facts: true
+  ignore_unreachable: true
+
+  roles:
+    - tailscale_user_device
