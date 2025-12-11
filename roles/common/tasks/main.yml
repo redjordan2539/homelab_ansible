@@ -64,6 +64,27 @@
   become_user: jdelpilar
   when: ansible_os_family == "Archlinux"
 
+# Download and set up tailscale on linux
+- name: Download Tailscale install script
+  ansible.builtin.get_url:
+    url: https://tailscale.com/install.sh
+    dest: /tmp/tailscale_install.sh
+    mode: '0700'
+  when: ansible_os_family != "Darwin"
+
+- name: Install Tailscale
+  ansible.builtin.command:
+    cmd: /tmp/tailscale_install.sh
+    creates: /usr/bin/tailscale
+  when: ansible_os_family != "Darwin"
+
+# Install tailscale on MacOS
+- name: Install Tailscale with Cask
+  community.general.homebrew_cask:
+    name: tailscale
+    state: present
+  when: ansible_os_family == "Darwin"
+
 # Set git user name and email
 - name: Configure git user name
   community.general.git_config:

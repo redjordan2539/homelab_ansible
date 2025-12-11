@@ -17,3 +17,12 @@
 
   roles:
     - common
+
+- name: Setup Tailscale for servers
+  hosts: tailscale_servers
+  become: true
+  gather_facts: true
+  ignore_unreachable: false
+
+  roles:
+    - tailscale_server
