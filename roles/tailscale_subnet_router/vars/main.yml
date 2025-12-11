@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: MIT-0
+---
+# vars file for roles/tailscale_subnet_router
+
+tailscale_subnet_router_subnet: 10.200.202.0/24

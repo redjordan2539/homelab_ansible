@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/tailscale_subnet_router
+
+# Start Tailscale with Preauth key and as subnet router
+- name: Tailscale Up as subnet router
+  ansible.builtin.command: >
+    tailscale up
+    --authkey={{  tailscale_auth_key }}
+    --login-server={{ all_tailscale_login_url }}
+    --advertise-routes={{ tailscale_subnet_router_subnet }}
+    --accept-dns=false
+  changed_when: false
