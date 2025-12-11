@@ -13,10 +13,17 @@
     ssh_key_bits: 2048
     ssh_key_file: .ssh/id_rsa
 
-- name: Get Public Key
+- name: Get Public Key Linux
   ansible.builtin.slurp:
     src: "/home/{{ ansible_user }}/.ssh/id_rsa.pub"
   register: common_public_key
+  when: ansible_os_family != "Darwin"
+
+- name: Get Public Key MacOS
+  ansible.builtin.slurp:
+    src: "/Users/{{ ansible_user }}/.ssh/id_rsa.pub"
+  register: common_public_key
+  when: ansible_os_family == "Darwin"
 
 - name: Add Public Key
   ansible.posix.authorized_key:
