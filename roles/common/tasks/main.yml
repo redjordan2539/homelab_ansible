@@ -43,6 +43,7 @@
   community.general.homebrew:
     name: "{{ common_packages }}"
     state: present
+  become: false
   when: ansible_os_family == "Darwin"
 
 # Install text editor
@@ -59,6 +60,7 @@
   community.general.homebrew_cask:
     name: "{{ common_default_editors[editor][ansible_os_family] }}"
     state: present
+  become: false
   when: ansible_os_family == "Darwin"
 
 # Arch install editor (AUR)
@@ -90,6 +92,7 @@
   community.general.homebrew_cask:
     name: tailscale
     state: present
+  become: false
   when: ansible_os_family == "Darwin"
 
 # Set git user name and email
