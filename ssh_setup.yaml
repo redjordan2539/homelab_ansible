@@ -27,7 +27,7 @@
         marker: "# {mark} ANSIBLE MANAGED HOSTS"
         block: |
           {% for host in groups['all'] %}
-          Host {{ host }}
+          Host {{ host }} {{ hostvars[host]['ansible_host'] }}
               HostName {{ hostvars[host]['ansible_host'] }}
               User {{ hostvars[host]['ansible_user'] }}
               IdentityFile ~/.ssh/{{ host }}
