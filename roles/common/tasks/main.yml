@@ -60,6 +60,8 @@
   community.general.homebrew_cask:
     name: "{{ common_default_editors[editor][ansible_os_family] }}"
     state: present
+    install_options:
+      - force
   become: false
   when: ansible_os_family == "Darwin"
 
