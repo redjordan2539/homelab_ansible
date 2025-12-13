@@ -1,23 +1,13 @@
 # SPDX-License-Identifier: MIT-0
 ---
 # vars file for common
-
-common_default_editors:
-  nano:
-    Debian: nano
-    RedHat: nano
-    Archlinux: nano
-    Darwin: nano
-  vscode:
-    Debian: nano
-    RedHat: nano
-    Archlinux: visual-studio-code-bin
-    Darwin: visual-studio-code
-
 common_packages:
   - curl
+  - wget
   - git
-  - htop
+  - btop
   - unzip
+  - nmap
+  - tree
 
 common_target_user: jdelpilar

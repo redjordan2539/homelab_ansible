@@ -1,0 +1,7 @@
+---
+common_terminal_editor: nano
+common_gui_editor: vscode
+
+common_extra_packages:
+  - coreutils
+  - lunar

@@ -1,0 +1,6 @@
+---
+common_terminal_editor: nano
+common_gui_editor: null
+
+common_extra_packages:
+  - net-tools
