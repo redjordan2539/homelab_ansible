@@ -1,0 +1,30 @@
+---
+- name: Install Common Packages
+  community.general.homebrew:
+    name: "{{ common_packages }}"
+    state: present
+  become: false
+
+- name: Install Extra Packages
+  community.general.homebrew:
+    name: "{{ common_extra_packages }}"
+    state: present
+  become: false
+
+- name: Install Terminal Editor
+  community.general.homebrew:
+    name: "{{ common_terminal_editor }}"
+    state: present
+  become: false
+
+- name: Install GUI Editor
+  community.general.homebrew_cask:
+    name: "{{ common_gui_editor }}"
+  become: false
+  when: common_gui_editor is not none
+
+- name: Install Tailscale
+  community.general.homebrew:
+    name: tailscale
+    state: present
+  become: false
