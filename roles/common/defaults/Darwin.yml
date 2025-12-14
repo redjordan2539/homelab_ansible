@@ -1,7 +1,7 @@
 ---
 common_user_directory: /Users
 common_terminal_editor: nano
-common_gui_editor: vscode
+common_gui_editor: visual-studio-code
 
 common_extra_packages:
   - coreutils
