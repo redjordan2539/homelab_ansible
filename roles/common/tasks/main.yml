@@ -1,11 +1,15 @@
 ---
-# Set Device HostName
+- name: Load Platform specific variables
+  ansible.builtin.include_vars: "defaults/{{ ansible_system }}.yml"
+
+- name: Load Platform specific tasks
+  ansible.builtin.include_tasks: "{{ ansible_system }}.yml"
+
 - name: Set Device HostName
   ansible.builtin.hostname:
     name: "{{ inventory_hostname }}"
   notify: Restart Network
 
-# Enable self-SSH connection:
 - name: Ensure User ssh key
   ansible.builtin.user:
     name: "{{ ansible_user }}"
@@ -13,17 +17,10 @@
     ssh_key_bits: 2048
     ssh_key_file: .ssh/id_rsa
 
-- name: Get Public Key Linux
+- name: Get Public Key
   ansible.builtin.slurp:
-    src: "/home/{{ ansible_user }}/.ssh/id_rsa.pub"
+    src: "{{ common_user_directory }}/{{ ansible_user }}/.ssh/id_rsa.pub"
   register: common_public_key
-  when: ansible_os_family != "Darwin"
-
-- name: Get Public Key MacOS
-  ansible.builtin.slurp:
-    src: "/Users/{{ ansible_user }}/.ssh/id_rsa.pub"
-  register: common_public_key
-  when: ansible_os_family == "Darwin"
 
 - name: Add Public Key
   ansible.posix.authorized_key:
@@ -31,73 +28,6 @@
     state: present
     key: "{{ common_public_key['content'] | b64decode }}"
 
-# Install Common Linux Packages
-- name: Install Common Linux Packages
-  ansible.builtin.package:
-    name: "{{ common_packages }}"
-    state: present
-  when: ansible_os_family != "Darwin"
-
-# Install Common MacOS Packages
-- name: Install Common MacOS Packages
-  community.general.homebrew:
-    name: "{{ common_packages }}"
-    state: present
-  become: false
-  when: ansible_os_family == "Darwin"
-
-# Install text editor
-- name: Install Default editor
-  ansible.builtin.package:
-    name: "{{ common_default_editors[editor][ansible_os_family] }}"
-    state: present
-  when:
-    - ansible_os_family != "Darwin"
-    - ansible_os_family != "Archlinux"
-
-# MacOS install editor
-- name: Install Default MacOS editor
-  community.general.homebrew_cask:
-    name: "{{ common_default_editors[editor][ansible_os_family] }}"
-    state: present
-    install_options:
-      - force
-  become: false
-  when: ansible_os_family == "Darwin"
-
-# Arch install editor (AUR)
-- name: Install Default Arch editor
-  kewlfft.aur.aur:
-    name: "{{ common_default_editors[editor][ansible_os_family] }}"
-    use: yay
-    state: present
-  become: true
-  become_user: jdelpilar
-  when: ansible_os_family == "Archlinux"
-
-# Download and set up tailscale on linux
-- name: Download Tailscale install script
-  ansible.builtin.get_url:
-    url: https://tailscale.com/install.sh
-    dest: /tmp/tailscale_install.sh
-    mode: '0700'
-  when: ansible_os_family != "Darwin"
-
-- name: Install Tailscale
-  ansible.builtin.command:
-    cmd: /tmp/tailscale_install.sh
-    creates: /usr/bin/tailscale
-  when: ansible_os_family != "Darwin"
-
-# Install tailscale on MacOS
-- name: Install Tailscale with Cask
-  community.general.homebrew_cask:
-    name: tailscale
-    state: present
-  become: false
-  when: ansible_os_family == "Darwin"
-
-# Set git user name and email
 - name: Configure git user name
   community.general.git_config:
     name: user.name

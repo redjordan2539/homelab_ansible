@@ -1,0 +1,44 @@
+---
+- name: Install Common Packages
+  ansible.builtin.package:
+    name: "{{ common_packages }}"
+    state: present
+
+- name: Install Extra Packages
+  ansible.builtin.package:
+    name: "{{ common_extra_packages }}"
+    state: present
+
+- name: Install Terminal Editor
+  ansible.builtin.package:
+    name: "{{ common_terminal_editor }}"
+    state: present
+
+- name: Install GUI Editor
+  when: common_gui_editor is not none
+  block:
+    - name: Install GUI Editor (Standard)
+      ansible.builtin.package:
+        name: "{{ common_gui_editor }}"
+        state: present
+      when: ansible_os_family != "Archlinux"
+
+    - name: Install GUI Editor (AUR)
+      kewlfft.aur.aur:
+        name: "{{ common_gui_editor }}"
+        use: yay
+        state: present
+      become: true
+      become_user: "{{ common_target_user }}"
+      when: ansible_os_family == "Archlinux"
+
+- name: Download Tailscale install script
+  ansible.builtin.get_url:
+    url: https://tailscale.com/install.sh
+    dest: /tmp/tailscale_install.sh
+    mode: '0700'
+
+- name: Install Tailscale
+  ansible.builtin.command:
+    cmd: /tmp/tailscale_install.sh
+    creates: /usr/bin/tailscale
