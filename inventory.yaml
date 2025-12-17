@@ -23,13 +23,17 @@ all:
         editor: vscode
       children:
         macbooks:
-          hosts:
-            ss-aqua:
-              ansible_host: ss-aqua.delpilar.net
-              ansible_user: jdelpilar
-            magnet-train:
-              ansible_host: magnet-train.delpilar.net
-              ansible_user: jdelpilar
+          children:
+            m1_macs:
+              hosts:
+                ss-aqua:
+                  ansible_host: ss-aqua.delpilar.net
+                  ansible_user: jdelpilar
+            intel_macs:
+              hosts:
+                magnet-train:
+                  ansible_host: magnet-train.delpilar.net
+                  ansible_user: jdelpilar
         arch_workstations:
           hosts:
             mt-silver:
@@ -50,3 +54,11 @@ all:
             mt-silver:
             ss-aqua:
             magnet-train:
+    macos:
+      children:
+        m1_macs:
+        intel_macs:
+    linux:
+      children:
+        servers:
+        arch_workstations:
