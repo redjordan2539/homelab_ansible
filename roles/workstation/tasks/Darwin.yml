@@ -1,0 +1,13 @@
+---
+- name: Install Casks
+  ansible.builtin.homebrew_cask:
+    name: "{{ cask_packages }}"
+    greedy: true
+    install_options: "force"
+  become: false
+
+- name: Install Brews
+  community.general.homebrew:
+    name: "{{ brew_packages }}"
+    state: present
+  become: false
