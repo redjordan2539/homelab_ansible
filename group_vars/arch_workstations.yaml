@@ -1,2 +1,20 @@
 ---
 common_gui_editor: visual-studio-code-bin
+
+pacman_packages: 
+  - firefox
+  - spotify-player
+  - fzf
+  - ripgrep
+  - fd
+  - bat
+  - btop
+  - lazygit
+  - tmux
+  - tealdeer
+  - zoxide
+  - bitwarden
+  - kitty
+
+aur_packages:
+  - discord-canary
