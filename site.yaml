@@ -44,3 +44,12 @@
 
   roles:
     - tailscale_user_device
+
+- name: Workstation Setup
+  hosts: workstations
+  become: true
+  gather_facts: true
+  ignore_unreachable: true
+
+  roles:
+    - workstation
