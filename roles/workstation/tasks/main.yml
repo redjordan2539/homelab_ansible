@@ -1,3 +1,20 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 # tasks file for roles/workstation
+
+- name: Load OS Specific tasks
+  ansible.builtin.include_tasks: "{{ ansible_os_family }}.yml"
+
+- name: Get ZSH Path
+  ansible.builtin.command: which zsh
+  register: workstation_zsh_path
+  changed_when: false
+  failed_when: false
+
+- name: Set ZSH as user shell
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    shell: "{{ workstation_zsh_path.stdout }}"
+  when: 
+   - workstation_zsh_path.rc == 0
+   - workstation_zsh_path.stdout | length > 0
