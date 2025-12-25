@@ -1,0 +1,15 @@
+---
+
+- name: Install Pacman Packages
+  ansible.builtin.package:
+    name: "{{ pacman_packages }}"
+    state: present
+
+- name: Install AUR Paclages
+  kewlfft.aur.aur:
+    name: "{{ aur_packages }}"
+    use: yay
+    state: present
+  become: true
+  become_user: "{{ ansible_user }}"
+  
