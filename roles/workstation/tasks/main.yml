@@ -16,5 +16,46 @@
     name: "{{ ansible_user }}"
     shell: "{{ workstation_zsh_path.stdout }}"
   when: 
-   - workstation_zsh_path.rc == 0
-   - workstation_zsh_path.stdout | length > 0
+    - workstation_zsh_path.rc == 0
+    - workstation_zsh_path.stdout | length > 0
+
+- name: Clone dotfile Repo
+  ansible.builtin.git:
+    repo: "{{ workstation_dotfile_repo_url }}"
+    dest: "{{ user_directory }}/dotfiles"
+    version: master
+    update: true
+    force: no
+
+- name: Ensure vscode User Dir
+  ansible.builtin.file:
+    path: "{{ vscode_user_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Symlink settings.json From dotfiles
+  ansible.builtin.file:
+    src: "{{ user_directory }}/dotfiles/vscode/settings.json"
+    dest: "{{ vscode_user_dir }}/settings.json"
+    state: link
+    force: true
+
+- name: Install Base vscode Extensions
+  ansible.builtin.command: "code --install-extension {{ item }} --force"
+  register: workstation_extension_result
+  changed_when: "'already installed' not in workstation_extension_result.stdout"
+  loop: "{{ workstation_vscode_base_extensions }}"
+
+- name: Create .zshrc
+  ansible.builtin.template:
+    src: .zshrc.j2
+    dest: "{{ user_directory }}/{{ ansible_user }}/.zshrc"
+    owner: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: Create Directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ workstations_directories }}"
