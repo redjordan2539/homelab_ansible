@@ -19,3 +19,9 @@ brew_packages:
   - tmux
   - tealdeer
   - zoxide
+  - eza
+
+user_directory: /Users
+
+vscode_user_dir: "{{ user_directory }}/{{ ansible_user }}/Library/Application Support/Code/User"
+
