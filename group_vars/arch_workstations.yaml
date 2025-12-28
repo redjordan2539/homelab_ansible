@@ -15,6 +15,7 @@ pacman_packages:
   - zoxide
   - bitwarden
   - kitty
+  - eza
 
 aur_packages:
   - discord-canary
