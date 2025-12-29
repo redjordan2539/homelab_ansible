@@ -1,0 +1,18 @@
+#SPDX-License-Identifier: MIT-0
+---
+# vars file for roles/workstation
+
+workstation_dotfile_repo_url: https://github.com/redjordan2539/dotfiles
+
+workstation_vscode_base_extensions:
+  - catppuccin.catppuccin-vsc
+  - catppuccin.catppuccin-vsc-icons
+  - eamodio.gitlens
+  - gruntfuggly.todo-tree
+  - ms-vscode-remote.remote-ssh
+  - ms-vscode-remote.remote-ssh-edit
+  - ms-vscode.remote-explorer
+  - oderwat.indent-rainbow
+  - streetsidesoftware.code-spell-checker
+  - usernamehw.errorlens
+  - wholroyd.jinja

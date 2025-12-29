@@ -1,2 +1,27 @@
 ---
 timeout_command: gtimeout
+
+cask_packages:
+  - firefox
+  - discord
+  - vlc
+  - kitty
+
+
+brew_packages:
+  - spotify_player
+  - fzf
+  - ripgrep
+  - fd
+  - bat
+  - btop
+  - lazygit
+  - tmux
+  - tealdeer
+  - zoxide
+  - eza
+
+user_directory: /Users
+
+vscode_user_dir: "{{ user_directory }}/{{ ansible_user }}/Library/Application Support/Code/User"
+

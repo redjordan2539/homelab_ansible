@@ -1,0 +1,5 @@
+workstations_directories:
+  - "{{ user_directory }}/{{ ansible_user }}/repos"
+  - "{{ user_directory }}/{{ ansible_user }}/repos/work"
+  - "{{ user_directory }}/{{ ansible_user }}/repos/personal"
+  - "{{ user_directory }}/{{ ansible_user }}/repos/forks"
