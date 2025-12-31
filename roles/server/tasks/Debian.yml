@@ -1,0 +1,31 @@
+---
+
+- name: Install Crowdsec
+  block:
+    - name: Download CrowdSec GPG Key
+      ansible.builtin.get_url:
+        url: https://packagecloud.io/crowdsec/crowdsec/gpgkey
+        dest: /usr/share/keyrings/crowdsec-archive-keyring.asc
+        mode: '0644'
+        force: no
+    - name: Add CrowdSec APT Repository
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/crowdsec-archive-keyring.asc] https://packagecloud.io/crowdsec/crowdsec/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} main"
+        filename: crowdsec
+        state: present
+        update_cache: yes
+    - name: Install Crowdsec
+      ansible.builtin.package:
+        name: crowdsec
+        state: present
+    - name: Install Crowdsec Bouncer
+      ansible.builtin.package:
+        name: crowdsec-firewall-bouncer-iptables
+        state: present
+
+- name: UFW Allow Ports
+  community.general.ufw:
+    rule: allow
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+  loop: "{{ open_ports }}"
