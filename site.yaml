@@ -53,3 +53,12 @@
 
   roles:
     - workstation
+
+- name: Server Setup
+  hosts: servers
+  become: true
+  gather_facts: true
+  ignore_unreachable: false
+
+  roles:
+    - server
