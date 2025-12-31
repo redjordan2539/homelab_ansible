@@ -1,0 +1,21 @@
+---
+
+- name: Install Crowdsec
+  block:
+    - name: Add Crowdsec Repo
+      ansible.builtin.yum_repository:
+        name: crowdsec
+        description: Crowdsec Offical Repo
+        baseurl: "https://packagecloud.io/crowdsec/crowdsec/el/{{ ansible_distribution_major_version }}/$basearch"
+        repo_gpgcheck: yes
+        gpgcheck: yes
+        gpgkey: 
+          - https://packagecloud.io/crowdsec/crowdsec/gpgkey
+        sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+        sslverify: yes
+        state: present
+    - name: Install Crowdsec
+      ansible.builtin.package:
+        name: crowdsec
+        state: present
+        update_cache: true
