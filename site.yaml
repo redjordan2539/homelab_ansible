@@ -53,3 +53,13 @@
 
   roles:
     - workstation
+
+
+- name: Podman Server Setup
+  hosts: podman_servers
+  become: true
+  gather_facts: true
+  ignore_unreachable: false
+
+  roles:
+    - podman_server
