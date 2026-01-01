@@ -62,3 +62,9 @@ all:
       children:
         servers:
         arch_workstations:
+    podman_servers:
+      hosts:
+        new-bark:  
+    docker_servers:
+      hosts:
+        goldenrod:
