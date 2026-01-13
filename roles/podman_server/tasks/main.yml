@@ -1,0 +1,53 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/podman_server
+
+- name: Enable systemd lingering for Ansible User
+  ansible.builtin.command:
+    cmd: "loginctl enable-linger {{ ansible_user }}"
+    creates: "/var/lib/systemd/linger/{{ ansible_user }}"
+
+- name: Install Podman
+  ansible.builtin.package:
+    name: podman
+    state: present
+
+- name: Ensure Podman Time is Running
+  ansible.builtin.systemd:
+    name: podman-auto-update.timer
+    state: started
+    enabled: true
+    scope: user
+  become: false
+
+- name: Create Podman Container directory
+  ansible.builtin.file:
+    path: "{{ user_directory }}/{{ ansible_user }}/.config/containers"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+  become: false
+
+- name: Create Podman Quadlets
+  ansible.builtin.template:
+    src: generic_quadlet.j2
+    dest: "{{ user_directory }}/{{ ansible_user }}/.config/containers/systemd/{{ item.key }}.container"
+    owner: "{{ ansible_user }}"
+    mode: "664"
+  become: false
+  loop: "{{ podman_containers | dict2items }}"
+
+- name: Reload systemctl Daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+    scope: user
+  become: false
+
+- name: Start Podman Containers
+  ansible.builtin.systemd:
+    name: "{{ item.key }}"
+    state: restarted
+    scope: user
+  become: false
+  loop: "{{ podman_containers | dict2items }}"
