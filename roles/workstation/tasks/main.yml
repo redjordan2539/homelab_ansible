@@ -27,11 +27,23 @@
     update: true
     force: no
 
+- name: Ensure vscode Main Dir
+  ansible.builtin.file:
+    path: "{{ vscode_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+    recurse: yes
+
 - name: Ensure vscode User Dir
   ansible.builtin.file:
     path: "{{ vscode_user_dir }}"
     state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     mode: "0755"
+    recurse: yes
 
 - name: Symlink settings.json From dotfiles
   ansible.builtin.file:
