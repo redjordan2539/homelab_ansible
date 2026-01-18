@@ -47,7 +47,7 @@
 
 - name: Symlink settings.json From dotfiles
   ansible.builtin.file:
-    src: "{{ user_directory }}/dotfiles/vscode/settings.json"
+    src: "{{ user_directory }}/{{ ansible_user  }}/dotfiles/vscode/settings.json"
     dest: "{{ vscode_user_dir }}/settings.json"
     state: link
     force: true
