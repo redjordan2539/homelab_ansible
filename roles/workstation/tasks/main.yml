@@ -15,14 +15,14 @@
   ansible.builtin.user:
     name: "{{ ansible_user }}"
     shell: "{{ workstation_zsh_path.stdout }}"
-  when: 
+  when:
     - workstation_zsh_path.rc == 0
     - workstation_zsh_path.stdout | length > 0
 
 - name: Clone dotfile Repo
   ansible.builtin.git:
     repo: "{{ workstation_dotfile_repo_url }}"
-    dest: "{{ user_directory }}/dotfiles"
+    dest: "{{ user_directory }}/{{ ansible_user }}/dotfiles"
     version: master
     update: true
     force: true
@@ -47,7 +47,7 @@
 
 - name: Symlink settings.json From dotfiles
   ansible.builtin.file:
-    src: "{{ user_directory }}/dotfiles/vscode/settings.json"
+    src: "{{ user_directory }}/{{ ansible_user  }}/dotfiles/vscode/settings.json"
     dest: "{{ vscode_user_dir }}/settings.json"
     state: link
     force: true
