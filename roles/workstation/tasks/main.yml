@@ -25,13 +25,25 @@
     dest: "{{ user_directory }}/dotfiles"
     version: master
     update: true
-    force: no
+    force: true
+
+- name: Ensure vscode Main Dir
+  ansible.builtin.file:
+    path: "{{ vscode_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+    recurse: yes
 
 - name: Ensure vscode User Dir
   ansible.builtin.file:
     path: "{{ vscode_user_dir }}"
     state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     mode: "0755"
+    recurse: yes
 
 - name: Symlink settings.json From dotfiles
   ansible.builtin.file:
@@ -45,6 +57,7 @@
   register: workstation_extension_result
   changed_when: "'already installed' not in workstation_extension_result.stdout"
   loop: "{{ workstation_vscode_base_extensions }}"
+  become_user: "{{ ansible_user }}"
 
 - name: Create .zshrc
   ansible.builtin.template:
