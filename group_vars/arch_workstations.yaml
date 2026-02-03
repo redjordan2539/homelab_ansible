@@ -16,6 +16,7 @@ pacman_packages:
   - bitwarden
   - kitty
   - eza
+  - zsh
 
 aur_packages:
   - discord-canary
