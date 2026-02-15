@@ -41,6 +41,11 @@ all:
               ansible_user: jdelpilar
               gaming_rig: true
               network_manager: NetworkManager
+        ubuntu_workstations:
+          hosts:
+            silver-cave:
+              ansible_host: silver-cave.delpilar.net
+              ansible_user: jdelpilar
     tailscale:
       children:
         tailscale_subnet_routers:
@@ -54,6 +59,7 @@ all:
             mt-silver:
             ss-aqua:
             magnet-train:
+            silver-cave:
     macos:
       children:
         m1_macs:
@@ -62,9 +68,13 @@ all:
       children:
         servers:
         arch_workstations:
+        ubuntu_workstations:
     podman_servers:
       hosts:
         new-bark:  
     docker_servers:
       hosts:
         goldenrod:
+    wsl_workstaions:
+      hosts:
+        silver-cave:
