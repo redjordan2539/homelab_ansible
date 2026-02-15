@@ -8,3 +8,7 @@ apt_packages:
   - zoxide
   - eza
   - zsh
+  - pipx
+
+pipx_packages:
+  - tldr
