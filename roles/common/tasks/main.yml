@@ -9,6 +9,7 @@
   ansible.builtin.hostname:
     name: "{{ inventory_hostname }}"
   notify: Restart Network
+  when: "'wsl_workstations' not in group_names"
 
 - name: Ensure User ssh key
   ansible.builtin.user:
