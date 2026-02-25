@@ -1,0 +1,14 @@
+apt_packages: 
+  - fzf
+  - ripgrep
+  - fd-find
+  - bat
+  - btop
+  - tmux
+  - zoxide
+  - eza
+  - zsh
+  - pipx
+
+pipx_packages:
+  - tldr
