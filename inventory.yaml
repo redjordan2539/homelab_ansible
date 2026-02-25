@@ -75,6 +75,6 @@ all:
     docker_servers:
       hosts:
         goldenrod:
-    wsl_workstaions:
+    wsl_workstations:
       hosts:
         silver-cave:
