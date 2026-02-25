@@ -1,0 +1,22 @@
+---
+
+- name: Install Apt Packages
+  ansible.builtin.apt:
+    name: "{{ apt_packages }}"
+    state: present
+
+- name: pipx Ensure Path
+  ansible.builtin.command: pipx ensurepath
+  register: debian_path_fix
+  changed_when: debian_path_fix.rc == 0
+
+- name: Install pipx Packages
+  ansible.builtin.command: "pipx install {{ item }}"
+  loop: "{{ pipx_packages }}"
+  register: debian_pipx_output
+  changed_when: "'installed package' in debian_pipx_output.stdout"
+  failed_when: 
+    - debian_pipx_output.rc != 0
+    - "'already installed' not in debian_pipx_output.stderr"
+  become: true
+  become_user: "{{ ansible_user }}"
