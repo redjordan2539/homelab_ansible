@@ -63,3 +63,5 @@
 
   roles:
     - podman_server
+  tags:
+    - podman
