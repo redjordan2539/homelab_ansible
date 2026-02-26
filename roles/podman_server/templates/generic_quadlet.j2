@@ -16,33 +16,31 @@ Requires=adguard.service
 ContainerName={{item.key}}
 DNS={{ container_dns_ip }}
 Image={{ item.value.image_url }}
-Network=proxy_network:ip={{container_ip_prefix }}.{{ item.value.ip_address_octet }}
+Network=proxy_network:ip={{ container_ip_prefix }}.{{ item.value.ip_address_octet }}
 AutoUpdate=registry
 UserNS=keep-id
+User=0
 
-{% if item.value.published_ports %}
-{% for published_port in item.value.published_ports %}
+{% for published_port in item.value.published_ports | default([], true) %}
+# Ports #
 PublishPort={{ published_port.host_port }}:{{ published_port.container_port }}/{{ published_port.proto }}
 {% endfor %}
-{% endif %}
 
-{% if item.value.volumes %}
-{% for volume in item.value.volumes %}
-Volume={{ volume.host_path }}:{{ volume.container_path }}
+{% for volume in item.value.volumes | default([], true)  %}
+# Volumes #
+Volume={{ volume.host_path }}:{{ volume.container_path }}{% if volume.flags is defined %}:{{ volume.flags | default('', true)}}{% endif %}
+
 {% endfor %}
-{% endif %}
 
-{% if item.value.env_vars %}
-{% for var in item.value.env_vars %}
+{% for var in item.value.env_vars | default([], true)  %}
+# Environment Variables #
 Environment={{var.name}}={{var.value}}
 {% endfor %}
-{% endif %}
 
-{% if item.value.devices %}
-{% for device in item.value.devices %}
+{% for device in item.value.devices | default([], true)  %}
+# Devices #
 AddDevice={{ device }}
 {% endfor %}
-{% endif %}
 
 [Service]
 Restart=always
