@@ -19,12 +19,16 @@ podman_containers:
       - host_port: 443
         container_port: 443
         proto: udp
+      - host_port: 843
+        container_port: 843
+        proto: tcp
     volumes:
       - host_path: /appdata/podman/nginx-proxy-manager/data
         container_path: /data
       - host_path: /appdata/podman/nginx-proxy-manager/etc
         container_path: /etc/letsencrypt
     env_vars:
+    devices:
   mc-vanilla:
     image_url: docker.io/itzg/minecraft-server:latest
     ip_address_octet: "5"
@@ -44,5 +48,7 @@ podman_containers:
         value: "4G"
       - name: MAX_IDLE_TIME
         value: "0"
+    devices:
+    
 
 
