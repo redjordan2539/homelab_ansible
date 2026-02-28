@@ -2,15 +2,26 @@
 ---
 # tasks file for roles/podman_server
 
+- name: Allow Binding Low Ports
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_unprivileged_port_start
+    value: "80"
+    state: present
+    reload: true
+  become: true
+
+
 - name: Enable systemd lingering for Ansible User
   ansible.builtin.command:
     cmd: "loginctl enable-linger {{ ansible_user }}"
     creates: "/var/lib/systemd/linger/{{ ansible_user }}"
+  become: true
 
 - name: Install Podman
   ansible.builtin.package:
     name: podman
     state: present
+  become: true
 
 - name: Ensure Podman Time is Running
   ansible.builtin.systemd:
@@ -18,16 +29,25 @@
     state: started
     enabled: true
     scope: user
-  become: false
+  become_user: "{{ ansible_user }}"
 
 - name: Create Podman Container directory
   ansible.builtin.file:
-    path: "{{ user_directory }}/{{ ansible_user }}/.config/containers"
+    path: "{{ user_directory }}/{{ ansible_user }}/.config/containers/systemd"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0755"
-  become: false
+
+- name: Create Podman Container Volume Paths
+  ansible.builtin.file:
+    path: "{{ item.1.host_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+  loop: "{{ podman_containers | dict2items | subelements('value.volumes', skip_missing=True) }}"
+  become: true
 
 - name: Create Podman Quadlets
   ansible.builtin.template:
@@ -35,19 +55,33 @@
     dest: "{{ user_directory }}/{{ ansible_user }}/.config/containers/systemd/{{ item.key }}.container"
     owner: "{{ ansible_user }}"
     mode: "664"
-  become: false
   loop: "{{ podman_containers | dict2items }}"
+  
 
 - name: Reload systemctl Daemon
   ansible.builtin.systemd:
     daemon_reload: true
     scope: user
-  become: false
+  become_user: "{{ ansible_user }}"
 
 - name: Start Podman Containers
   ansible.builtin.systemd:
     name: "{{ item.key }}"
     state: restarted
     scope: user
-  become: false
   loop: "{{ podman_containers | dict2items }}"
+  become_user: "{{ ansible_user }}"
+
+- name: Fix Podman Volume Owner
+  ansible.builtin.file:
+    path: "{{ item.1.host_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+    recurse: true
+  loop: "{{ podman_containers | dict2items | subelements('value.volumes', skip_missing=True) }}"
+  become: true
+  tags:
+    - podman-fix-volume-owner
+    - never

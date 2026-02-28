@@ -25,10 +25,10 @@ podman_containers:
     volumes:
       - host_path: /appdata/podman/nginx-proxy-manager/data
         container_path: /data
+        flags: U
       - host_path: /appdata/podman/nginx-proxy-manager/etc
         container_path: /etc/letsencrypt
-    env_vars:
-    devices:
+        flags: U
   mc-vanilla:
     image_url: docker.io/itzg/minecraft-server:latest
     ip_address_octet: "5"
@@ -39,6 +39,7 @@ podman_containers:
     volumes: 
       - host_path: /appdata/podman/mc-vanilla
         container_path: /data
+        flags: U
     env_vars:
       - name: EULA
         value: TRUE
@@ -48,7 +49,7 @@ podman_containers:
         value: "4G"
       - name: MAX_IDLE_TIME
         value: "0"
-    devices:
+
     
 
 
