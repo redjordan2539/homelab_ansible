@@ -6,6 +6,9 @@
 
   roles:
     - common
+  tags:
+    - common
+    - server
 
 - name: Configure Workstations
   hosts: workstations
@@ -17,6 +20,9 @@
 
   roles:
     - common
+  tags: 
+    - common
+    - workstation
 
 - name: Setup Tailscale for servers
   hosts: tailscale_servers
@@ -26,6 +32,8 @@
 
   roles:
     - tailscale_server
+  tags:
+    - tailscale
 
 - name: Setup Tailscale for subnet routers
   hosts: tailscale_subnet_routers
@@ -34,6 +42,9 @@
   ignore_unreachable: false
 
   roles:
+    - tailscale_subnet_router
+  tags:
+    - tailscale
     - tailscale_subnet_router
 
 - name: Setup Tailscale for user devices
@@ -44,6 +55,9 @@
 
   roles:
     - tailscale_user_device
+  tags:
+    - tailscale
+    - tailscale_user_device
 
 - name: Workstation Setup
   hosts: workstations
@@ -52,6 +66,8 @@
   ignore_unreachable: true
 
   roles:
+    - workstation
+  tags:
     - workstation
 
 
