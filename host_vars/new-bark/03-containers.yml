@@ -68,7 +68,20 @@ podman_containers:
         value: 1000
       - name: PGID
         value: 1000
-
-    
-
-
+  filebrowser:
+    image_url: docker.io/filebrowser/filebrowser:latest
+    ip_address_octet: "6"
+    volumes:
+      - host_path: /appdata/podman/filebrowser/database
+        container_path: /database
+        flags: U
+      - host_path: /appdata/podman/filebrowser/config
+        container_path: /config
+        flags: U
+      - host_path: /storage
+        container_path: /srv
+    env_vars:
+      - name: PUID
+        value: 1000
+      - name: PGID
+        value: 1000
