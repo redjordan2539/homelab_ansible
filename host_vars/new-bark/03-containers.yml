@@ -49,6 +49,25 @@ podman_containers:
         value: "4G"
       - name: MAX_IDLE_TIME
         value: "0"
+  jellyfin:
+    image_url: docker.io/jellyfin/jellyfin
+    ip_address_octet: "4"
+    volumes:
+      - host_path: /appdata/podman/jellyfin/config
+        container_path: /config
+        flags: U
+      - host_path: /appdata/podman/jellyfin/cache
+        container_path: /cache
+        flags: U
+      - host_path: /storage/media
+        container_path: /media
+    env_vars:
+      - name: TZ
+        value: America/Lost_Angeles
+      - name: PUID
+        value: 1000
+      - name: PGID
+        value: 1000
 
     
 
