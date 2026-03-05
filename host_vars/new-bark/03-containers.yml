@@ -85,3 +85,18 @@ podman_containers:
         value: 1000
       - name: PGID
         value: 1000
+  freshrss:
+    image_url: docker.io/freshrss/freshrss:latest
+    ip_address_octet: "7"
+    volumes:
+      - host_path: /appdata/podman/freshrss/data
+        container_path: /var/www/FreshRSS/data
+        flags: U
+      - host_path: /appdata/podman/freshrss/extensions
+        container_path: /var/www/FreshRSS/extensions
+        flags: U
+    env_vars:
+      - name: TZ
+        value: America/Los_Angeles
+      - name: CRON_MIN
+        value: 1,31 
