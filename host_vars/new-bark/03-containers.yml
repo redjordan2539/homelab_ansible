@@ -63,7 +63,7 @@ podman_containers:
         container_path: /media
     env_vars:
       - name: TZ
-        value: America/Lost_Angeles
+        value: America/Los_Angeles
       - name: PUID
         value: 1000
       - name: PGID
