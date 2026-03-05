@@ -100,3 +100,13 @@ podman_containers:
         value: America/Los_Angeles
       - name: CRON_MIN
         value: 1,31 
+  ntfy:
+    image_url: docker.io/binwiederhier/ntfy
+    ip_address_octet: "8"
+    volumes:
+      - host_path: /appdata/podman/ntfy/cache
+        container_path: /var/cache/ntfy
+        flag: U
+    env_vars: 
+      - name: TZ
+        value: America/Los_Angeles
