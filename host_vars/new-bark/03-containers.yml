@@ -19,8 +19,8 @@ podman_containers:
       - host_port: 443
         container_port: 443
         proto: udp
-      - host_port: 843
-        container_port: 843
+      - host_port: 853
+        container_port: 853
         proto: tcp
     volumes:
       - host_path: /appdata/podman/nginx-proxy-manager/data
