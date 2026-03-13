@@ -68,6 +68,8 @@ podman_containers:
         value: 1000
       - name: PGID
         value: 1000
+    devices:
+      - nvidia.com/gpu=all
   filebrowser:
     image_url: docker.io/filebrowser/filebrowser:latest
     ip_address_octet: "6"
