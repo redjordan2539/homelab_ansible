@@ -19,8 +19,8 @@ podman_containers:
       - host_port: 443
         container_port: 443
         proto: udp
-      - host_port: 843
-        container_port: 843
+      - host_port: 853
+        container_port: 853
         proto: tcp
     volumes:
       - host_path: /appdata/podman/nginx-proxy-manager/data
@@ -49,7 +49,66 @@ podman_containers:
         value: "4G"
       - name: MAX_IDLE_TIME
         value: "0"
-
-    
-
-
+  jellyfin:
+    image_url: docker.io/jellyfin/jellyfin
+    ip_address_octet: "4"
+    volumes:
+      - host_path: /appdata/podman/jellyfin/config
+        container_path: /config
+        flags: U
+      - host_path: /appdata/podman/jellyfin/cache
+        container_path: /cache
+        flags: U
+      - host_path: /storage/media
+        container_path: /media
+    env_vars:
+      - name: TZ
+        value: America/Los_Angeles
+      - name: PUID
+        value: 1000
+      - name: PGID
+        value: 1000
+    devices:
+      - nvidia.com/gpu=all
+  filebrowser:
+    image_url: docker.io/filebrowser/filebrowser:latest
+    ip_address_octet: "6"
+    volumes:
+      - host_path: /appdata/podman/filebrowser/database
+        container_path: /database
+        flags: U
+      - host_path: /appdata/podman/filebrowser/config
+        container_path: /config
+        flags: U
+      - host_path: /storage
+        container_path: /srv
+    env_vars:
+      - name: PUID
+        value: 1000
+      - name: PGID
+        value: 1000
+  freshrss:
+    image_url: docker.io/freshrss/freshrss:latest
+    ip_address_octet: "7"
+    volumes:
+      - host_path: /appdata/podman/freshrss/data
+        container_path: /var/www/FreshRSS/data
+        flags: U
+      - host_path: /appdata/podman/freshrss/extensions
+        container_path: /var/www/FreshRSS/extensions
+        flags: U
+    env_vars:
+      - name: TZ
+        value: America/Los_Angeles
+      - name: CRON_MIN
+        value: 1,31 
+  ntfy:
+    image_url: docker.io/binwiederhier/ntfy
+    ip_address_octet: "8"
+    volumes:
+      - host_path: /appdata/podman/ntfy/cache
+        container_path: /var/cache/ntfy
+        flag: U
+    env_vars: 
+      - name: TZ
+        value: America/Los_Angeles
