@@ -13,6 +13,12 @@ Requires=adguard.service
 
 
 [Container]
+# ========== #
+# Base Config Settings
+{#
+    Basic identity, networking, config and permission settings.
+    These settings are used by all containers. 
+#}
 ContainerName={{item.key}}
 DNS={{ container_dns_ip }}
 Image={{ item.value.image_url }}
@@ -21,29 +27,86 @@ AutoUpdate=registry
 UserNS=keep-id
 User=0
 
+# ========== #
+# Metadata
+{#
+    This section detailed metadata use by podman to label containers.
+    Think of these as notes for your containers. By default these labels are used to label containers maintained by ansible
+#}
+Label=managed-by=ansible
+Label=owner={{ ansible_user | default('unknown') }}
+# ========== #
+
+
+{% if item.value.published_ports is defined %}
+# ========== #
+# Published Ports
+{#
+    Ports published by the container.
+    These ports are accessible via <server ip address>:<port number>
+    for example 192.168.200.200:8080
+#}
 {% for published_port in item.value.published_ports | default([], true) %}
-# Ports #
 PublishPort={{ published_port.host_port }}:{{ published_port.container_port }}/{{ published_port.proto }}
 {% endfor %}
+# ========== #
+{% endif %}
 
+
+{% if item.value.volumes is defined %}
+# ========== #
+# Volumes
+{#
+    Volumes used by the container.
+    Mapping is in the form of <host path>:<container path>:<flags (optional)>
+#}
 {% for volume in item.value.volumes | default([], true)  %}
-# Volumes #
 Volume={{ volume.host_path }}:{{ volume.container_path }}{% if volume.flags is defined %}:{{ volume.flags | default('', true)}}{% endif %}
 
 {% endfor %}
+# ========== #
+{% endif %}
 
+{% if item.value.env_vars is defined %}
+# ========== #
+# Environment Variables
+{#
+    These are the environment variables set within the container itself. 
+    These are specific to the container image, so check the documentation for the image you are using for required variables
+#}
 {% for var in item.value.env_vars | default([], true)  %}
-# Environment Variables #
 Environment={{var.name}}={{var.value}}
 {% endfor %}
+# ========== #
+{% endif %}
 
+{% if item.value.devices is defined %}
+# ========== #
+# Devices
+{#
+    This is a list of all devices that the container will have access to.
+    In most cases this will be used for passing GPUs and USB devices to the container.
+    Note, in the case of GPUs multiple containers can use the same GPU at the same time. 
+#}
 {% for device in item.value.devices | default([], true)  %}
-# Devices #
 AddDevice={{ device }}
 {% endfor %}
+# ========== #
+{% endif %}
 
 [Service]
 Restart=always
+{% if item.value.exec is defined %}
+# ========== #
+# Exec Command
+{#
+    This allows you to set a command to be ran at start up of the container.
+    This is also very specific to the container image. Check the image documentation to check if any Exec command is required to be set
+    or if any can be set by the user.
+#}
+Exec={{ item.value.exec }}
+# ========== #
+{% endif %}
 
 [Install]
 WantedBy=default.target
