@@ -3,4 +3,5 @@ timeout_command: timeout
 
 user_directory: /home
 
+vscode_dir: "{{ user_directory }}/{{ ansible_user }}/.config/Code"
 vscode_user_dir: "{{ user_directory }}/{{ ansible_user }}/.config/Code/User"

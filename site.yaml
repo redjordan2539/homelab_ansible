@@ -54,11 +54,21 @@
   roles:
     - workstation
 
+<<<<<<< HEAD
 - name: Server Setup
   hosts: servers
+=======
+
+- name: Podman Server Setup
+  hosts: podman_servers
+>>>>>>> origin/master
   become: true
   gather_facts: true
   ignore_unreachable: false
 
   roles:
+<<<<<<< HEAD
     - server
+=======
+    - podman_server
+>>>>>>> origin/master

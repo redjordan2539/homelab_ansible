@@ -1,0 +1,48 @@
+---
+container_ip_prefix: 10.220.1
+container_dns_ip: 10.220.1.2
+
+podman_containers:
+  npm:
+    image_url: docker.io/jc21/nginx-proxy-manager:latest
+    ip_address_octet: "3"
+    published_ports:
+      - host_port: 80
+        container_port: 80
+        proto: tcp
+      - host_port: 81
+        container_port: 81
+        proto: tcp
+      - host_port: 443
+        container_port: 443
+        proto: tcp
+      - host_port: 443
+        container_port: 443
+        proto: udp
+    volumes:
+      - host_path: /appdata/podman/nginx-proxy-manager/data
+        container_path: /data
+      - host_path: /appdata/podman/nginx-proxy-manager/etc
+        container_path: /etc/letsencrypt
+    env_vars:
+  mc-vanilla:
+    image_url: docker.io/itzg/minecraft-server:latest
+    ip_address_octet: "5"
+    published_ports:
+      - host_port: 25565
+        container_port: 25565
+        proto: tcp
+    volumes: 
+      - host_path: /appdata/podman/mc-vanilla
+        container_path: /data
+    env_vars:
+      - name: EULA
+        value: TRUE
+      - name: TYPE
+        value: VANILLA
+      - name: MEMORY
+        value: "4G"
+      - name: MAX_IDLE_TIME
+        value: "0"
+
+

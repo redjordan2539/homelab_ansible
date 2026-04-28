@@ -23,5 +23,5 @@ brew_packages:
 
 user_directory: /Users
 
+vscode_dir: "{{ user_directory }}/{{ ansible_user }}/Library/Application Support/Code"
 vscode_user_dir: "{{ user_directory }}/{{ ansible_user }}/Library/Application Support/Code/User"
-
