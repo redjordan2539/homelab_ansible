@@ -112,3 +112,38 @@ podman_containers:
     env_vars: 
       - name: TZ
         value: America/Los_Angeles
+  restic_gdrive:
+    image_url: docker.io/mazzolino/restic
+    ip_address_octet: 9
+    volumes:
+      - host_path: /home/jdelpilar/.config/containers/secrets/server-backup-494718-de0ac68bf687.json
+        container_path: /credentials/gdrive-sa.json
+        flag: ro
+      - host_path: /storage/backups
+        container_path: /data/backups
+        flag: ro
+      - host_path: /storage/projects
+        container_path: /data/projects
+        flag: ro
+      - host_path: /storage/photos
+        container_path: /data/photos
+        flag: ro
+      - host_path: /appdata
+        container_path: /data/appdata
+        flag: ro
+    env_vars:
+      - name: RESTIC_REPOSITORY
+        value: rclone:gdrive:/ServerBackups
+      - name: RESTIC_PASSWORD
+        value: "{{ restic_repo_pass }}"
+      - name: RCLONE_CONFIG_GDRIVE_TYPE
+        value: "drive"
+      - name: RCLONE_CONFIG_GDRIVE_TEAM_DRIVE
+        value: 0ABB4XQijFZtPUk9PVA
+      - name: RCLONE_CONFIG_GDRIVE_SERVICE_ACCOUNT_FILE
+        value: /credentials/gdrive-sa.json
+      - name: RESTIC_FORGET_ARGS
+        value: "--keep-daily 7 --keep-weekly 4"
+      - name: BACKUP_CRON
+        value: "0 3 * * *"
+    
