@@ -41,7 +41,7 @@
 
 - name: Create Podman Container Volume Paths
   ansible.builtin.file:
-    path: "{{ item.1.host_path }}"
+    path: "{{ item.1.host_path | dirname }}"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
